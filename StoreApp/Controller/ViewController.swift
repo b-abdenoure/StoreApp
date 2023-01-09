@@ -57,9 +57,10 @@ class ViewController: UIViewController {
     }
     
     let productURL = "https://fakestoreapi.com/products"
+    var randomNumber = Int.random(in:1...20)
     
     func fetchAllProduct(){
-        let urlString = "\(productURL)/1"
+        let urlString = "\(productURL)/\(randomNumber)"
         // string for limited fetch >>>> ?limit=3
         productFetch(with: urlString)
         print(urlString)
