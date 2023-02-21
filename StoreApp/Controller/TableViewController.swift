@@ -86,8 +86,10 @@ class TableViewController: UIViewController {
 //        jsonSerialization(jsonData: jsonData)
 //    }
     
+    
     func jsonSerialization(jsonData: Data) {
 //        let decoder = JSONDecoder()
+
         if let json = try? JSONSerialization.jsonObject(with: jsonData, options: .allowFragments) as? [Any]{
 //                let item3 = try? decoder.decode(ArrayProductData.self, from: jsonData)
             for item in json{
@@ -96,11 +98,12 @@ class TableViewController: UIViewController {
                         let idProduct = object["id"] as? String ?? "epmty"
                         print("idiiiiii:\(idProduct)")
                         let titleProduct = object["title"] as? String ?? "epmty"
+                        print("idiiiiii:\(titleProduct)")
                         let priceProduct = object["price"] as? String ?? "epmty"
                         let descriptionProduct = object["description"] as? String ?? "epmty"
                         let imageProduct = object["image"] as? String ?? "epmty"
                         let categoryProduct = object["category"] as? String ?? "epmty"
-                        
+
                         productsArray.append(
                             ArrayProductModel(
                                 idProduct: idProduct,
@@ -113,22 +116,52 @@ class TableViewController: UIViewController {
                         )
                     }
                 }
-            
             productsTable.reloadData()
-            
         }
-
     }
+    
+    
+//    func jsonSerialization(jsonData: Data) {
+////        let decoder = JSONDecoder()
+//        if let json = try? JSONSerialization.jsonObject(with: jsonData, options: .allowFragments) as? [Any]{
+////                let item3 = try? decoder.decode(ArrayProductData.self, from: jsonData)
+//            for item in json{
+//                    print(item)
+//                    if let object = item as? [String: Any] {
+//                        let idProduct = object["id"] as? String ?? "epmty"
+//                        print("idiiiiii:\(idProduct)")
+//                        let titleProduct = object["title"] as? String ?? "epmty"
+//                        let priceProduct = object["price"] as? String ?? "epmty"
+//                        let descriptionProduct = object["description"] as? String ?? "epmty"
+//                        let imageProduct = object["image"] as? String ?? "epmty"
+//                        let categoryProduct = object["category"] as? String ?? "epmty"
+//
+//                        productsArray.append(
+//                            ArrayProductModel(
+//                                idProduct: idProduct,
+//                                titleProduct: titleProduct,
+//                                priceProduct: priceProduct + " $",
+//                                descriptionProduct: descriptionProduct,
+//                                imageProduct: imageProduct,
+//                                categoryProduct: categoryProduct
+//                            )
+//                        )
+//                    }
+//                }
+//            productsTable.reloadData()
+//        }
+//    }
     func jsonDecoder(jsonData: Data){
-        let json = try! JSONDecoder().decode([ArrayProductModel].self, from: jsonData)
-        for item in json {
+        let decoder = JSONDecoder()
+        let jsonProduct = try? decoder.decode([ArrayProductModel]?.self, from: jsonData)
+        for item in jsonProduct ?? [] {
             let idProduct = item.idProduct
             let titleProduct = item.titleProduct
             let priceProduct = item.priceProduct
             let descriptionProduct = item.descriptionProduct
             let imageProduct = item.imageProduct
             let categoryProduct = item.categoryProduct
-            
+
             productsArray.append(
                 ArrayProductModel(
                     idProduct: idProduct,
@@ -154,14 +187,25 @@ extension TableViewController: UITableViewDataSource{
 	        let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath)
             as? ProductsCell
         let product = productsArray[indexPath.row]
-        cell?.idCell.text = product.idProduct
-        cell?.titleCell.text = product.titleProduct
-        cell?.priceCell.text = product.priceProduct
-        cell?.descriptionCell.text = product.descriptionProduct
-        cell?.imageCell.image = UIImage(named: product.imageProduct)
-        cell?.categoryCell.text = product.categoryProduct
+        
+        guard let id = product.idProduct,
+              let title = product.titleProduct,
+              let price = product.priceProduct,
+              let description = product.descriptionProduct,
+              let image = product.imageProduct,
+              let category = product.categoryProduct
+              else {
+                return UITableViewCell()
+            }
+        
+        cell?.idCell.text = id
+        cell?.titleCell.text = title
+        cell?.priceCell.text = price
+        cell?.descriptionCell.text = description
+        cell?.imageCell.image = UIImage(named: image)
+        cell?.categoryCell.text = category
         
         
-        return cell!
+        return cell ?? nil
     }
 }
