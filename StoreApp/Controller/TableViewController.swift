@@ -17,12 +17,12 @@ class ProductsCell: UITableViewCell{
     @IBOutlet weak var priceCell: UILabel!
     override func prepareForReuse() {
         super.prepareForReuse()
-        imageCell.image = #imageLiteral(resourceName: "IOS_logo")
-        titleCell.text = ""
-        descriptionCell.text = ""
-        categoryCell.text = ""
-        idCell.text = ""
-        priceCell.text = ""
+        imageCell.image = #imageLiteral(resourceName: "colibri-aus-dem-nebelwald-von-kolumbien-243431a7-d446-4798-b246-6d009d4805f2")
+        titleCell.text = "1"
+        descriptionCell.text = "1"
+        categoryCell.text = "1"
+        idCell.text = "1"
+        priceCell.text = "1"
     }
     
 }
@@ -36,7 +36,7 @@ class TableViewController: UIViewController {
     
     @IBOutlet weak var productsTable: UITableView!
     
-    struct ArrayProductModel: Decodable {
+    struct ArrayProductModel {
         let idProduct: String
         let titleProduct: String
         let priceProduct: String
@@ -153,7 +153,7 @@ class TableViewController: UIViewController {
 //    }
     func jsonDecoder(jsonData: Data){
         let decoder = JSONDecoder()
-        let jsonProduct = try? decoder.decode([ArrayProductModel]?.self, from: jsonData)
+        let jsonProduct = try? decoder.decode([ArrayProductData]?.self, from: jsonData)
         for item in jsonProduct ?? [] {
             let idProduct = item.idProduct
             let titleProduct = item.titleProduct
@@ -184,28 +184,27 @@ extension TableViewController: UITableViewDataSource{
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-	        let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath)
-            as? ProductsCell
+        let cell = tableView.dequeueReusableCell(withIdentifier: "cell1", for: indexPath)
+            as! ProductsCell
         let product = productsArray[indexPath.row]
         
-        guard let id = product.idProduct,
-              let title = product.titleProduct,
-              let price = product.priceProduct,
-              let description = product.descriptionProduct,
-              let image = product.imageProduct,
-              let category = product.categoryProduct
-              else {
-                return UITableViewCell()
-            }
+        let id = product.idProduct
+        let title = product.titleProduct
+        let price = product.priceProduct
+        let description = product.descriptionProduct
+        let image = product.imageProduct
+        let category = product.categoryProduct
+           
         
-        cell?.idCell.text = id
-        cell?.titleCell.text = title
-        cell?.priceCell.text = price
-        cell?.descriptionCell.text = description
-        cell?.imageCell.image = UIImage(named: image)
-        cell?.categoryCell.text = category
+        cell.idCell.text = id
+        print("eeeedededede\(id)")
+        cell.titleCell.text = title
+        cell.priceCell.text = price
+        cell.descriptionCell.text = description
+        cell.imageCell.image = UIImage(named: image)
+        cell.categoryCell.text = category
         
         
-        return cell ?? nil
+        return cell
     }
 }
